@@ -1,4 +1,8 @@
 import _hashlib
+import binascii
+
+from Crypto import Random
+from Crypto.PublicKey import RSA
 
 SEED = "mz8yPvgQpsWtf2SY"
 
@@ -22,7 +26,7 @@ class Block:
         return _hashlib.openssl_sha256(signature)
 
 
-class BlockChain():
+class BlockChain:
     def __init__(self):
         self.ledger = []
 
@@ -32,3 +36,24 @@ class BlockChain():
 
     def list_blocks(self):
         return self.ledger
+
+
+class Wallet:
+    def __init__(self):
+        random_generator = Random.new().read
+
+        self.private_key = RSA.generate(1024, random_generator)
+        self.public_key = self.private_key.publickey()
+
+    @staticmethod
+    def bin2hex(bin_str):
+        return binascii.hexlify(bin_str)
+
+    @staticmethod
+    def hex2bin(hex_str):
+        return binascii.unhexlify(hex_str)
+
+    def encrypt_message(self, message):
+        assert message
+        result = self.public_key.encrypt(message, 32)[0]
+        return Wallet.bin2hex(result)
