@@ -6,6 +6,7 @@ from lib.chain import Chain
 pp = pprint.PrettyPrinter(indent=4)
 
 bc = Chain()
+bc.MINE_DIFFICULTY = 6
 
 # Generate genesis block
 b0 = Block("Genesis block", "0")
